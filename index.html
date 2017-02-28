@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Test</title>
+	
+<script src="pixi.min.js"></script>
+<script src="Particle.js"></script>
+<script src="Collision.js"></script>
+
+</head>
+<body>
+</body>
+<script>
+
+    let renderer = PIXI.autoDetectRenderer(1200, 700,{backgroundColor: 0x154360 });
+
+    renderer.view.style.border = "1px solid blue";
+
+    document.body.appendChild(renderer.view);
+	
+	let stage = new PIXI.Container();
+	
+	let Particles = [];
+	
+	for (let i = 0 ; i < 401 ; i++)
+	{
+	
+		Particles.push(new Particle( 2, 4 ));
+		
+		Particles[i].setPosition( ((i*10)+4 )%1200 , Math.floor(i*10 /1200)*100);
+		Particles[i].setVelocity( i%10, -i%10);
+		Particles[i].draw();
+		Particles[i].addTo(stage);
+	}
+	
+	let collision = new Collision();
+	
+	update();
+	
+    function update()
+	{
+		collision.checkCollision(Particles);
+		
+		for( let i = 0 ;  i < Particles.length ; i++)
+		{
+		
+			collision.reposition(Particles[i]);
+		
+		}
+		collision.walls(Particles , 1200 , 700);
+		
+		renderer.render(stage);
+        requestAnimationFrame(update);
+
+    }
+
+</script>
+</html>
